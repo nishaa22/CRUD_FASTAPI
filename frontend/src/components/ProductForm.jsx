@@ -1,8 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InputField from "./InputField";
-import { addProduct, getAllProducts } from "../utils/product";
+import { addProduct, getAllProducts, updateProduct } from "../utils/product";
 
-const ProductForm = ({ setAllProducts }) => {
+const ProductForm = ({ setAllProducts, isEdit, setIsEdit, productToBeUpdated }) => {
   const [product, setProduct] = useState({
     id: Math.floor(Math.random() * 100),
     name: "",
@@ -10,6 +10,12 @@ const ProductForm = ({ setAllProducts }) => {
     price: "",
     quantity: "",
   });
+
+  useEffect(() => {
+    if (isEdit && productToBeUpdated) {
+      setProduct(productToBeUpdated);
+    }
+  }, [isEdit, productToBeUpdated]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,9 +25,9 @@ const ProductForm = ({ setAllProducts }) => {
     }));
   };
 
-  const handleAddProduct = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const res = await addProduct(product)
+    const res = isEdit ? await updateProduct(productToBeUpdated.id, product) : await addProduct(product)
     if (res.status == 200) {
       const data = await getAllProducts()
       setAllProducts(data)
@@ -32,12 +38,12 @@ const ProductForm = ({ setAllProducts }) => {
         price: "",
         quantity: "",
       })
+      setIsEdit(false)
     }
-
   }
 
   return (
-    <form className="bg-white flex flex-col w-[50%] mt-10 border border-gray-200 p-10 rounded-xl shadow-lg" onSubmit={(e) => handleAddProduct(e)} method="post">
+    <form className="bg-white flex flex-col w-[50%] mt-10 border border-gray-200 p-10 rounded-xl shadow-lg" onSubmit={(e) => handleSubmit(e)} method="post">
       <InputField
         label="Product ID"
         name="id"
@@ -81,7 +87,7 @@ const ProductForm = ({ setAllProducts }) => {
         onChange={handleChange}
       />
 
-      <button className="mt-5 bg-green-600 text-white rounded-lg p-2 cursor-pointer" type="submit">Add Product</button>
+      <button className="mt-5 bg-green-600 text-white rounded-lg p-2 cursor-pointer" type="submit">{isEdit ? "Update Product" : "Add Product"}</button>
     </form>
   );
 };

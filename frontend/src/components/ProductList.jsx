@@ -2,9 +2,10 @@ import React from "react";
 import ProductCard from "./ProductCard";
 import { deleteProduct, getAllProducts } from "../utils/product";
 
-const ProductList = ({ allProducts, setAllProducts }) => {
+const ProductList = ({ allProducts, setAllProducts, setIsEdit, setProductToBeUpdated }) => {
   const handleEdit = (product) => {
-    alert(`Edit product: ${product.name}`);
+    setIsEdit(true)
+    setProductToBeUpdated(product)
   };
 
   const handleDelete = async (product) => {
@@ -12,7 +13,6 @@ const ProductList = ({ allProducts, setAllProducts }) => {
     if (res.status == 200) {
       const data = await getAllProducts()
       setAllProducts(data)
-      alert(`Delete product: ${product.name}`);
     }
   };
 
