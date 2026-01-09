@@ -1,4 +1,4 @@
-from fastapi import Depends, FastAPI
+from fastapi import Depends, HTTPException, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from model import Product
 from database import session, engine
@@ -72,18 +72,21 @@ def get_all_products(db: Session = Depends(get_db)):  # dependency injection
 
 
 # url to fetch product by id
-@app.get("/product/{id}")
+@app.get("/products/{id}")
 def get_product_by_id(id: int, db: Session = Depends(get_db)):
     db_product = db.query(database_model.Product).filter(
         database_model.Product.id == id).first()
     if db_product:
         return db_product
     else:
-        return "Product not found"
+        raise HTTPException(
+            status_code=404,
+            detail="Product not found"
+        )
 
 
 # url to add a new product inside the product table
-@app.post("/product")
+@app.post("/products")
 def add_product(product: Product, db: Session = Depends(get_db)):
     db.add(database_model.Product(**product.model_dump()))
     db.commit()
@@ -91,7 +94,7 @@ def add_product(product: Product, db: Session = Depends(get_db)):
 
 
 # url to update a product using an id
-@app.put("/product/{id}")
+@app.put("/products/{id}")
 def update_product(id: int, product: Product, db: Session = Depends(get_db)):
     db_product = db.query(database_model.Product).filter(
         database_model.Product.id == id).first()
@@ -107,7 +110,7 @@ def update_product(id: int, product: Product, db: Session = Depends(get_db)):
 
 
 # url to delete a product by id
-@app.delete("/product/{id}")
+@app.delete("/products/{id}")
 def delete_product_by_id(id: int, db: Session = Depends(get_db)):
     db_product = db.query(database_model.Product).filter(
         database_model.Product.id == id).first()

@@ -34,6 +34,7 @@ python -m venv <environment_name>
 # fastapi also provide the support for swagger which is used to run the APIs
 - to check the api on swagger we need to add /docs
 - http://localhost:8000/docs
+- http://localhost:8000/redoc
 
 # REST(Representational state transfer) APIs 
 1. get()
