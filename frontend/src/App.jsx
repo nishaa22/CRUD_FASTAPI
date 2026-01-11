@@ -52,14 +52,19 @@ function App() {
       <div className="flex flex-col justify-center items-center bg-gradient-to-r from-green-200 to-pink-200 py-10">
         <h1 className='text-4xl font-bold'>Full-Stack CRUD Application – React, FastAPI & PostgreSQL</h1>
         <ProductForm setAllProducts={setAllProducts} isEdit={isEdit} productToBeUpdated={productToBeUpdated} setIsEdit={setIsEdit} />
-        <Search setSearchId={setSearchId} searchId={searchId} />
-        {notFound && (
-          <p className="mt-5 text-red-600 font-semibold">
-            No product found with this ID
-          </p>
-        )}
+
+
         {productsToShow.length > 0 && !notFound &&
-          <ProductList allProducts={productsToShow} setAllProducts={setAllProducts} setIsEdit={setIsEdit} setProductToBeUpdated={setProductToBeUpdated} />}
+          <>
+            <Search setSearchId={setSearchId} searchId={searchId} />
+            {notFound && (
+              <p className="mt-5 text-red-600 font-semibold">
+                No product found with this ID
+              </p>
+            )}
+            <ProductList allProducts={productsToShow} setAllProducts={setAllProducts} setIsEdit={setIsEdit} setProductToBeUpdated={setProductToBeUpdated} />
+          </>
+        }
       </div>
     </>
   )
